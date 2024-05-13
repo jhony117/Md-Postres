@@ -6,4 +6,12 @@
     </style>
 
     <style name="Theme.MDPostres" parent="Base.Theme.MDPostres" />
+
+
+
+<!--     Creo que yo no lo nesesito-->
+<!--    <style name="Theme.MDPostres.NoActionBar">&ndash;&gt;-->
+<!--         <item name="windowActionBar">false</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--    </style>-->
 </resources>

@@ -33,6 +33,9 @@ android {
 
 dependencies {
 
+    implementation(libs.navigationUi)
+   implementation(libs.glide)
+    implementation(libs.navigationfragment)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
