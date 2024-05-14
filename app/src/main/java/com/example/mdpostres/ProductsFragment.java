@@ -8,13 +8,21 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.transition.MaterialFadeThrough;
+import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ProductsFragment extends Fragment implements OnClickListener {
+
+
+
 
 
     private final List<Product> selectedProducts = new ArrayList<>();
@@ -24,12 +32,21 @@ public class ProductsFragment extends Fragment implements OnClickListener {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
+        setExitTransition(new MaterialFadeThrough());
 
+        setReenterTransition(new MaterialSharedAxis(MaterialSharedAxis.X, false));
+        setExitTransition(new MaterialSharedAxis(MaterialSharedAxis.X, true));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_products, container, false);
 
@@ -38,10 +55,23 @@ public class ProductsFragment extends Fragment implements OnClickListener {
 
     @Override
     public  void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
-        ProductAdapter = new ProductsAdapter(getProducts(), this);
-         Recyclerview recyclerview = view.findViewById(R.id.recylclerView);
-         recylcerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-         recylcerView.setAdapter(adapter);
+        ProductsAdapter adapter = new ProductsAdapter(getProducts(), this);
+         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setAdapter(adapter);
+
+        view.findViewById(R.id.btnAddCar).setOnClickListener(v -> {
+          //  NavHostFragment.findNavController(this).navigate(R.id.action_products_to_car);
+            ProductsFragmentDirections.ActionProductsToCar action =
+                    ProductsFragmentDirections.actionProductsToCar();
+            action.setProducts(getProductsStr());
+
+            NavHostFragment.findNavController(this).navigate(action);
+        });
+
+
+
+
     }
      private List<Product> getProducts() {
 
@@ -75,10 +105,25 @@ public class ProductsFragment extends Fragment implements OnClickListener {
 
          return null;
      }
+     private String[] getProductsStr(){
+        String[] productsStr = new String[selectedProducts.size()];
+        int index = 0;
+        for (Product product: selectedProducts){
+            productsStr[index] = product.getName();
+            index++;
+        }
+        return productsStr;
+     }
 
 
     @Override
     public void onClick(Product product) {
+
+        if(product.isSelected()){
+            selectedProducts.add(product);
+        } else {
+            selectedProducts.remove(product);
+        }
 
     }
 }
